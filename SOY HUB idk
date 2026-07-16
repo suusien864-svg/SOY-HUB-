@@ -1,0 +1,1035 @@
+-- =============================================================================
+-- [PART 1: CẤU HÌNH BAN ĐẦU & DỌN DẸP UI]
+-- =============================================================================
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local HubName = "SOY_HUB_Cartoon_BlueSky"
+
+local old = CoreGui:FindFirstChild(HubName) or LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild(HubName)
+if old then old:Destroy() end
+
+local UI = Instance.new("ScreenGui")
+UI.Name = HubName
+pcall(function() UI.Parent = CoreGui end)
+if not UI.Parent then UI.Parent = LocalPlayer:WaitForChild("PlayerGui") end
+
+
+-- =============================================================================
+-- [PART 2: DỰNG GIAO DIỆN CHÍNH (MAIN UI)]
+-- =============================================================================
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 520, 0, 320)
+MainFrame.Position = UDim2.new(0.5, -260, 0.4, -160)
+MainFrame.BackgroundColor3 = Color3.fromRGB(245, 248, 252)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = UI
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 16)
+MainCorner.Parent = MainFrame
+
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = Color3.fromRGB(215, 225, 235)
+MainStroke.Thickness = 2
+MainStroke.Parent = MainFrame
+
+local TopBar = Instance.new("Frame")
+TopBar.Size = UDim2.new(1, 0, 0, 45)
+TopBar.BackgroundColor3 = Color3.fromRGB(174, 219, 255)
+TopBar.BorderSizePixel = 0
+TopBar.Parent = MainFrame
+
+local TopCorner = Instance.new("UICorner")
+TopCorner.CornerRadius = UDim.new(0, 16)
+TopCorner.Parent = TopBar
+
+local TopChe = Instance.new("Frame")
+TopChe.Size = UDim2.new(1, 0, 0, 10)
+TopChe.Position = UDim2.new(0, 0, 1, -10)
+TopChe.BackgroundColor3 = Color3.fromRGB(174, 219, 255)
+TopChe.BorderSizePixel = 0
+TopChe.Parent = TopBar
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -60, 1, 0)
+Title.Position = UDim2.new(0, 15, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "☁️ SOY HUB <font color='rgb(255, 255, 255)'>[1.0]</font>"
+Title.TextColor3 = Color3.fromRGB(90, 120, 150)
+Title.TextSize = 16
+Title.Font = Enum.Font.SourceSansBold
+Title.RichText = true
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = TopBar
+
+local MinBtn = Instance.new("TextButton")
+MinBtn.Size = UDim2.new(0, 24, 0, 24)
+MinBtn.Position = UDim2.new(1, -35, 0.5, -12)
+MinBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+MinBtn.Text = "−"
+MinBtn.TextColor3 = Color3.fromRGB(90, 120, 150)
+MinBtn.Font = Enum.Font.SourceSansBold
+MinBtn.TextSize = 16
+MinBtn.Parent = TopBar
+
+local MinBtnCorner = Instance.new("UICorner")
+MinBtnCorner.CornerRadius = UDim.new(1, 0)
+MinBtnCorner.Parent = MinBtn
+
+local MiniBar = Instance.new("TextButton")
+MiniBar.Size = UDim2.new(0, 160, 0, 35)
+MiniBar.Position = UDim2.new(0.05, 0, 0.05, 0)
+MiniBar.BackgroundColor3 = Color3.fromRGB(174, 219, 255)
+MiniBar.Text = "☁️ SOY HUB"
+MiniBar.TextColor3 = Color3.fromRGB(255, 255, 255)
+MiniBar.Font = Enum.Font.SourceSansBold
+MiniBar.TextSize = 13
+MiniBar.BorderSizePixel = 0
+MiniBar.Visible = false
+MiniBar.Active = true
+MiniBar.Draggable = true
+MiniBar.Parent = UI
+
+local MiniCorner = Instance.new("UICorner")
+MiniCorner.CornerRadius = UDim.new(0, 10)
+MiniCorner.Parent = MiniBar
+
+local MiniStroke = Instance.new("UIStroke")
+MiniStroke.Color = Color3.fromRGB(255, 255, 255)
+MiniStroke.Thickness = 1.5
+MiniStroke.Parent = MiniBar
+
+
+-- =============================================================================
+-- [PART 3: HỆ THỐNG TABS BÊN TRÁI]
+-- =============================================================================
+local SideBar = Instance.new("Frame")
+SideBar.Size = UDim2.new(0, 130, 1, -45)
+SideBar.Position = UDim2.new(0, 0, 0, 45)
+SideBar.BackgroundColor3 = Color3.fromRGB(225, 238, 250)
+SideBar.BorderSizePixel = 0
+SideBar.Parent = MainFrame
+
+local SideCorner = Instance.new("UICorner")
+SideCorner.CornerRadius = UDim.new(0, 16)
+SideCorner.Parent = SideBar
+
+local SideChe = Instance.new("Frame")
+SideChe.Size = UDim2.new(0, 10, 1, 0)
+SideChe.Position = UDim2.new(1, -10, 0, 0)
+SideChe.BackgroundColor3 = Color3.fromRGB(225, 238, 250)
+SideChe.BorderSizePixel = 0
+SideChe.Parent = SideBar
+
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Size = UDim2.new(1, -145, 1, -55)
+ContentFrame.Position = UDim2.new(0, 140, 0, 50)
+ContentFrame.BackgroundTransparency = 1
+ContentFrame.Parent = MainFrame
+
+local Tabs = {}
+local function CreateTab(name, pos)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -10, 0, 35)
+    btn.Position = pos
+    btn.BackgroundColor3 = Color3.fromRGB(195, 224, 250)
+    btn.Text = name
+    btn.TextColor3 = Color3.fromRGB(90, 130, 170)
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextSize = 13
+    btn.BorderSizePixel = 0
+    btn.Parent = SideBar
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+
+    local panel = Instance.new("ScrollingFrame")
+    panel.Size = UDim2.new(1, 0, 1, 0)
+    panel.BackgroundTransparency = 1
+    panel.CanvasSize = UDim2.new(0, 0, 1.2, 0)
+    panel.ScrollBarThickness = 4
+    panel.ScrollBarImageColor3 = Color3.fromRGB(174, 219, 255)
+    panel.Visible = false
+    panel.Parent = ContentFrame
+
+    local layout = Instance.new("UIListLayout")
+    layout.Padding = UDim.new(0, 8)
+    layout.Parent = panel
+
+    btn.MouseButton1Click:Connect(function()
+        for _, t in pairs(Tabs) do
+            t.Panel.Visible = false
+            t.Button.BackgroundColor3 = Color3.fromRGB(195, 224, 250)
+            t.Button.TextColor3 = Color3.fromRGB(90, 130, 170)
+        end
+        panel.Visible = true
+        btn.BackgroundColor3 = Color3.fromRGB(150, 205, 255)
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    end)
+
+    Tabs[name] = {Button = btn, Panel = panel}
+    return panel
+end
+
+local MainPanel = CreateTab("Main", UDim2.new(0, 5, 0, 10))
+local CombatPanel = CreateTab("Combat", UDim2.new(0, 5, 0, 50))
+local CreditPanel = CreateTab("Credit", UDim2.new(0, 5, 0, 90))
+
+Tabs["Main"].Panel.Visible = true
+Tabs["Main"].Button.BackgroundColor3 = Color3.fromRGB(150, 205, 255)
+Tabs["Main"].Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+
+-- =============================================================================
+-- [PART 4: NÚT TÍNH NĂNG VÀ TRANG TRÍ CHI TIẾT TỪNG TAB]
+-- =============================================================================
+local function CreateToggleUI(parent, text, callback)
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, -10, 0, 35)
+    frame.BackgroundTransparency = 1
+    frame.Parent = parent
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -60, 1, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(100, 120, 140)
+    label.Font = Enum.Font.SourceSansBold
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = frame
+
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 45, 0, 22)
+    btn.Position = UDim2.new(1, -50, 0.5, -11)
+    btn.BackgroundColor3 = Color3.fromRGB(210, 220, 230)
+    btn.Text = ""
+    btn.Parent = frame
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 11)
+    
+    local active = false
+    btn.MouseButton1Click:Connect(function()
+        active = not active
+        btn.BackgroundColor3 = active and Color3.fromRGB(130, 200, 255) or Color3.fromRGB(210, 220, 230)
+        if callback then callback(active) end
+    end)
+end
+
+local function CreateButtonUI(parent, text, callback)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -10, 0, 35)
+    btn.BackgroundColor3 = Color3.fromRGB(174, 219, 255)
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextSize = 13
+    btn.Parent = parent
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+    
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(150, 200, 240)
+    stroke.Thickness = 1
+    stroke.Parent = btn
+
+    if callback then btn.MouseButton1Click:Connect(callback) end
+end
+
+-- --- 📌 HÀM HỖ TRỢ ESP PHÂN MÀU NGƯỜI CHƠI ---
+_G.EspActive = false
+local EspConnections = {}
+
+local function GetRoleColor(player)
+    if not player then return Color3.fromRGB(140, 230, 140) end
+    if player:FindFirstChild("Backpack") and player.Backpack:FindFirstChild("Knife") or (player.Character and player.Character:FindFirstChild("Knife")) then
+        return Color3.fromRGB(255, 120, 120)
+    elseif player:FindFirstChild("Backpack") and player.Backpack:FindFirstChild("Gun") or (player.Character and player.Character:FindFirstChild("Gun")) then
+        return Color3.fromRGB(130, 180, 255)
+    end
+    return Color3.fromRGB(140, 230, 140)
+end
+
+local function GiamESP(player, character)
+    if not character or player == LocalPlayer then return end
+    local oldEsp = character:FindFirstChild("SOY_AnimeESP")
+    if oldEsp then oldEsp:Destroy() end
+    
+    local hl = Instance.new("Highlight")
+    hl.Name = "SOY_AnimeESP"
+    hl.FillColor = GetRoleColor(player)
+    hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+    hl.FillTransparency = 0.4
+    hl.OutlineTransparency = 0.1
+    hl.Adornee = character
+    hl.Parent = character
+end
+
+local function GoESP(character)
+    if character then
+        local oldEsp = character:FindFirstChild("SOY_AnimeESP")
+        if oldEsp then oldEsp:Destroy() end
+    end
+end
+
+local function TheoDoiPlayer(p)
+    if p == LocalPlayer then return end
+    if p.Character then GiamESP(p, p.Character) end
+    
+        local charCon = p.CharacterAdded:Connect(function(char)
+        if _G.EspActive then
+            task.wait(0.3)
+            GiamESP(p, char)
+            local toolCon = char.ChildAdded:Connect(function(child)
+                if child:IsA("Tool") and (child.Name == "Knife" or child.Name == "Gun") then
+                    GiamESP(p, char)
+                end
+            end)
+            table.insert(EspConnections, toolCon)
+        end
+    end)
+
+    table.insert(EspConnections, charCon)
+
+    if p:FindFirstChild("Backpack") then
+        local bpCon = p.Backpack.ChildAdded:Connect(function()
+            if _G.EspActive and p.Character then
+                task.defer(GiamESP, p, p.Character)
+            end
+        end)
+        table.insert(EspConnections, bpCon)
+    end
+end
+
+-- --- 📌 HÀM HỖ TRỢ ESP SÚNG (ĐA NĂNG ĐÃ VÁ LỖI) ---
+_G.SoyEspGunActive = false
+local SoyGunConnections = {}
+
+local function KiemTraSungRoi(obj)
+    if not obj then return false end
+    local nameLower = string.lower(obj.Name)
+    if obj:IsA("Tool") or obj:IsA("Model") or obj:IsA("BasePart") then
+        if nameLower:match("gun") or nameLower:match("pistol") or nameLower:match("revolver") or nameLower:match("drop") then
+            if not obj:IsDescendantOf(LocalPlayer.Character) and not obj:IsDescendantOf(LocalPlayer:WaitForChild("Backpack")) then
+                local isInPlayer = false
+                for _, p in pairs(Players:GetPlayers()) do
+                    if (p.Character and obj:IsDescendantOf(p.Character)) or (p:FindFirstChild("Backpack") and obj:IsDescendantOf(p.Backpack)) then
+                        isInPlayer = true
+                        break
+                    end
+                end
+                if not isInPlayer then return true end
+            end
+        end
+    end
+    return false
+end
+
+local function TaoKhungSungESP(gunObj)
+    if not gunObj or gunObj:FindFirstChild("SOY_GunHighlight") then return end
+    local hl = Instance.new("Highlight")
+    hl.Name = "SOY_GunHighlight"
+    hl.FillColor = Color3.fromRGB(255, 255, 120)
+    hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+    hl.FillTransparency = 0.3
+    hl.OutlineTransparency = 0.1
+    hl.Adornee = gunObj
+    hl.Parent = gunObj
+    
+    local mainPart = gunObj:IsA("BasePart") and gunObj or gunObj:FindFirstChildWhichIsA("BasePart") or gunObj:FindFirstChild("Handle")
+    if mainPart then
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = "SOY_GunLabel"
+        billboard.Size = UDim2.new(0, 120, 0, 30)
+        billboard.AlwaysOnTop = true
+        billboard.StudsOffset = Vector3.new(0, 2, 0)
+        billboard.Adornee = mainPart
+        billboard.Parent = gunObj
+        
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.BackgroundTransparency = 1
+        label.Text = "🔫 " .. string.upper(gunObj.Name)
+        label.TextColor3 = Color3.fromRGB(255, 255, 255)
+        label.TextStrokeColor3 = Color3.fromRGB(90, 140, 200)
+        label.TextStrokeTransparency = 0
+        label.Font = Enum.Font.SourceSansBold
+        label.TextSize = 13
+        label.Parent = billboard
+    end
+end
+
+local function XoaKhungSungESP(gunObj)
+    if gunObj then
+        local hl = gunObj:FindFirstChild("SOY_GunHighlight")
+        local lbl = gunObj:FindFirstChild("SOY_GunLabel")
+        if hl then hl:Destroy() end
+        if lbl then lbl:Destroy() end
+    end
+end
+
+-- =============================================================================
+-- [📌 HỆ THỐNG THÔNG BÁO SÚNG RƠI CHẠY NGẦM CHỐNG SPAM TRÙNG LẶP]
+-- =============================================================================
+local Workspace = game:GetService("Workspace")
+local StarterGui = game:GetService("StarterGui")
+
+-- Biến khóa chống spam thông báo trùng lặp
+local IsGunNotificationCooling = false
+
+local function WatchGunDrop(obj)
+    if not obj then return end
+    
+    -- Kiểm tra chính xác tên vật thể súng rơi là "GunDrop"
+    if obj.Name == "GunDrop" then
+        task.defer(function()
+            -- Nếu đang trong thời gian khóa, bỏ qua không hiện thông báo tiếp
+            if IsGunNotificationCooling then return end
+            
+            -- Kích hoạt khóa lập tức
+            IsGunNotificationCooling = true
+            
+            -- Hiện duy nhất 1 dòng thông báo tiếng Anh lên góc màn hình
+            StarterGui:SetCore("SendNotification", {
+                Title = "SOY HUB",
+                Text = "The GUN has been DROPPED!",
+                Duration = 4 -- Hiển thị trong 4 giây
+            })
+            
+            -- Chờ 3 giây (khi súng đã rớt xong hoàn toàn) rồi mới mở khóa cho lượt súng rơi kế tiếp
+            task.wait(3)
+            IsGunNotificationCooling = false
+        end)
+    end
+end
+
+-- Quét nhanh phòng trường hợp súng đã rơi sẵn khi bạn vừa bật script
+for _, obj in pairs(Workspace:GetDescendants()) do WatchGunDrop(obj) end
+
+-- Lắng nghe Workspace liên tục để báo ngay giây phút súng vừa rớt ra sàn
+Workspace.DescendantAdded:Connect(WatchGunDrop)
+
+-- 📌 [THIẾT KẾ NÚT TAB: MAIN]
+CreateToggleUI(MainPanel, "👁️ ESP (Inno, Sher, Mur)", function(state)
+    _G.EspActive = state
+    if _G.EspActive then
+        for _, p in pairs(Players:GetPlayers()) do TheoDoiPlayer(p) end
+        local joinCon = Players.PlayerAdded:Connect(TheoDoiPlayer)
+        table.insert(EspConnections, joinCon)
+    else
+        for _, con in pairs(EspConnections) do if con then con:Disconnect() end end
+        EspConnections = {}
+        for _, p in pairs(Players:GetPlayers()) do GoESP(p.Character) end
+    end
+end)
+CreateToggleUI(MainPanel, "🔫 ESP Gun", function(state)
+    _G.SoyEspGunActive = state
+    if _G.SoyEspGunActive then
+        for _, obj in pairs(workspace:GetDescendants()) do
+            if obj.Name == "GunDrop" then TaoKhungSungESP(obj) end
+        end
+        local addCon = workspace.DescendantAdded:Connect(function(obj)
+            if _G.SoyEspGunActive then
+                task.defer(function()
+                    if obj.Name == "GunDrop" then TaoKhungSungESP(obj) end
+                end)
+            end
+        end)
+        table.insert(SoyGunConnections, addCon)
+        local removeCon = workspace.DescendantRemoving:Connect(function(obj)
+            if obj.Name == "GunDrop" then XoaKhungSungESP(obj) end
+        end)
+        table.insert(SoyGunConnections, removeCon)
+    else
+        for _, con in pairs(SoyGunConnections) do if con then con:Disconnect() end end
+        SoyGunConnections = {}
+        for _, obj in pairs(workspace:GetDescendants()) do 
+            if obj.Name == "GunDrop" then XoaKhungSungESP(obj) end 
+        end
+    end
+end)
+
+-- Biến kiểm soát vòng lặp ngầm cho Auto Tele Gun
+_G.AutoPickGunActive = false
+local GunDropTeleConnection = nil
+local IsCurrentlyTeleporting = false 
+
+-- Hàm Teleport phân đoạn siêu tốc, ép máy chủ nhận diện nhặt súng
+local function TeleportToGunPure(gunPart, rootPart)
+    if IsCurrentlyTeleporting or not gunPart or not rootPart then return end
+    IsCurrentlyTeleporting = true 
+    
+    pcall(function()
+        local RunService = game:GetService("RunService")
+        local oldCFrame = rootPart.CFrame
+        local targetCFrame = CFrame.new(gunPart.Position)
+        
+        -- Khóa gia tốc để tránh bị văng do lỗi vật lý
+        rootPart.AssemblyLinearVelocity = Vector3.zero
+        rootPart.AssemblyAngularVelocity = Vector3.zero
+        
+        -- Chia nhỏ quãng đường di chuyển thành 3 bước siêu tốc (0.03 giây) để qua mặt Anticheat khoảng cách
+        rootPart.CFrame = oldCFrame:Lerp(targetCFrame, 0.4)
+        RunService.Heartbeat:Wait()
+        
+        rootPart.CFrame = oldCFrame:Lerp(targetCFrame, 0.8)
+        RunService.Heartbeat:Wait()
+        
+        rootPart.CFrame = targetCFrame -- Đến chính xác vị trí súng
+        
+        -- Ép va chạm nhặt đồ bằng lệnh gốc của Roblox kết hợp lệnh Executor
+        if firetouchinterest then
+            firetouchinterest(rootPart, gunPart, 0)
+            RunService.Heartbeat:Wait() -- Giữ chân 1 khung hình để súng kịp vào túi đồ
+            firetouchinterest(rootPart, gunPart, 1)
+        else
+            -- Nếu Executor không hỗ trợ firetouchinterest, bắt buộc phải đợi 2 khung hình để nhặt tự nhiên
+            RunService.Heartbeat:Wait()
+            RunService.Heartbeat:Wait()
+        end
+        
+        -- Dịch chuyển phân đoạn ngược về vị trí cũ an toàn
+        rootPart.CFrame = targetCFrame:Lerp(oldCFrame, 0.5)
+        RunService.Heartbeat:Wait()
+        
+        rootPart.CFrame = oldCFrame
+        rootPart.AssemblyLinearVelocity = Vector3.zero
+        rootPart.AssemblyAngularVelocity = Vector3.zero
+    end)
+    
+    IsCurrentlyTeleporting = false 
+end
+
+-- =============================================================================
+-- [TÍNH NĂNG 1: NÚT BẤM TELE GUN]
+-- =============================================================================
+CreateButtonUI(MainPanel, "🏃‍♂️ Tele Gun", function()
+    if IsCurrentlyTeleporting then return end 
+    
+    local Workspace = game:GetService("Workspace")
+    local LocalPlayer = game:GetService("Players").LocalPlayer
+    local char = LocalPlayer.Character
+    local rootPart = char and char:FindFirstChild("HumanoidRootPart")
+    local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+    
+    if not rootPart or not humanoid or humanoid.Health <= 0 then return end
+    
+    local targetGunDrop = Workspace:FindFirstChild("GunDrop", true)
+    if targetGunDrop then
+        local gunPart = targetGunDrop:IsA("BasePart") and targetGunDrop or targetGunDrop:FindFirstChildWhichIsA("BasePart") or targetGunDrop:FindFirstChild("Handle")
+        if gunPart then
+            TeleportToGunPure(gunPart, rootPart)
+        end
+    end
+end)
+
+-- =============================================================================
+-- [TÍNH NĂNG 2: NÚT GẠT AUTO TELE GUN]
+-- =============================================================================
+CreateToggleUI(MainPanel, "🤖 Auto Tele GunDrop", function(state)
+    _G.AutoPickGunActive = state
+    
+    if _G.AutoPickGunActive then
+        local Workspace = game:GetService("Workspace")
+        local LocalPlayer = game:GetService("Players").LocalPlayer
+        
+        local function AutoGrabGun(obj)
+            if not _G.AutoPickGunActive or not obj or obj.Name ~= "GunDrop" then return end
+            if IsCurrentlyTeleporting then return end 
+            
+            task.defer(function()
+                local char = LocalPlayer.Character
+                local rootPart = char and char:FindFirstChild("HumanoidRootPart")
+                local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+                
+                if rootPart and humanoid and humanoid.Health > 0 then
+                    local gunPart = obj:IsA("BasePart") and obj or obj:FindFirstChildWhichIsA("BasePart") or obj:FindFirstChild("Handle")
+                    if gunPart then
+                        TeleportToGunPure(gunPart, rootPart)
+                    end
+                end
+            end)
+        end
+        
+        for _, obj in pairs(Workspace:GetDescendants()) do 
+            AutoGrabGun(obj) 
+        end
+        GunDropTeleConnection = Workspace.DescendantAdded:Connect(AutoGrabGun)
+    else
+        if GunDropTeleConnection then
+            GunDropTeleConnection:Disconnect()
+            GunDropTeleConnection = nil
+        end
+        IsCurrentlyTeleporting = false
+    end
+end)
+
+CreateButtonUI(MainPanel, "🧲 Teleport Tool", function()
+    local mouse = LocalPlayer:GetMouse()
+    local tpTool = Instance.new("Tool")
+    tpTool.Name = "⚡Teleport"
+    tpTool.RequiresHandle = false
+    
+    -- 🛠️ ĐÃ SỬA LỖI CHÍNH TẢ: Thay Actidated thành Activated chuẩn cấu trúc Roblox
+    tpTool.Activated:Connect(function()
+        local character = LocalPlayer.Character
+        local rootPart = character and character:FindFirstChild("HumanoidRootPart")
+        if rootPart and mouse.Hit then
+            rootPart.AssemblyLinearVelocity = Vector3.zero
+            rootPart.AssemblyAngularVelocity = Vector3.zero
+            rootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))
+        end
+    end)
+    
+    tpTool.Parent = LocalPlayer:WaitForChild("Backpack")
+end)
+--dau auto farm
+_G.SmartCoinFarmActive = false
+local SmartFarmThread = nil
+
+-- CẤU HÌNH VẬT LÝ VÀ KHOẢNG CÁCH NÉ
+local WALK_SPEED = 16 
+local ESCAPE_SPEED = WALK_SPEED * 3 -- Tốc độ lướt né siêu tốc khi gặp Murderer
+local SAFE_DISTANCE = 40            -- Khoảng cách cảm biến nguy hiểm
+local TOUCH_AURA_RANGE = 8          -- Bán kính nhặt xu sớm để xóa cooldown (8 studs)
+
+-- Hàm quét tìm kiếm chính xác vị trí Murderer đang cầm dao
+local function GetMurderer()
+    local Players = game:GetService("Players")
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= Players.LocalPlayer and player.Character then
+            local char = player.Character
+            if char:FindFirstChild("Knife") or player.Backpack:FindFirstChild("Knife") then
+                local root = char:FindFirstChild("HumanoidRootPart")
+                if root then return root end
+            end
+        end
+    end
+    return nil
+end
+
+-- Hàm quét lấy nhanh danh sách tất cả các xu thực tế trên sàn
+local function GetTrueMM2Coins()
+    local trueCoins = {}
+    local Workspace = game:GetService("Workspace")
+    for _, child in pairs(Workspace:GetChildren()) do
+        if child:IsA("Folder") or child:IsA("Model") then
+            local coinContainer = child:FindFirstChild("CoinContainer")
+            if coinContainer then
+                for _, coin in pairs(coinContainer:GetChildren()) do
+                    local part = coin:IsA("BasePart") and coin or coin:FindFirstChildWhichIsA("BasePart", true)
+                    if part then table.insert(trueCoins, part) end
+                end
+            end
+        end
+    end
+    return trueCoins
+end
+
+-- Vòng lặp chính xử lý di chuyển mượt mà phẳng chống giật
+local function StartSmartFarm()
+    local Players = game:GetService("Players")
+    local TweenService = game:GetService("TweenService")
+    local RunService = game:GetService("RunService")
+    local LocalPlayer = Players.LocalPlayer
+    
+    while _G.SmartCoinFarmActive do
+        RunService.Heartbeat:Wait()
+        
+        local char = LocalPlayer.Character
+        local rootPart = char and char:FindFirstChild("HumanoidRootPart")
+        local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+        
+        if not rootPart or not humanoid or humanoid.Health <= 0 then
+            task.wait(1)
+            continue
+        end
+        
+        -- Ép trạng thái vật lý để xuyên vật thể mượt mà, không làm lỗi trọng lực
+        humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+        
+        -- HỆ THỐNG PHẢN XẠ NÉ SIÊU TỐC 40 STUDS
+        local murdererRoot = GetMurderer()
+        if murdererRoot then
+            local distanceToMurderer = (rootPart.Position - murdererRoot.Position).Magnitude
+            if distanceToMurderer < SAFE_DISTANCE then
+                pcall(function()
+                    local runDirection = (rootPart.Position - murdererRoot.Position).Unit
+                    local escapeTargetPos = rootPart.Position + (runDirection * 40)
+                    local finalEscapePos = Vector3.new(escapeTargetPos.X, rootPart.Position.Y, escapeTargetPos.Z)
+                    
+                    local escapeDist = (rootPart.Position - finalEscapePos).Magnitude
+                    local escapeInfo = TweenInfo.new(escapeDist / ESCAPE_SPEED, Enum.EasingStyle.Linear)
+                    local escapeTween = TweenService:Create(rootPart, escapeInfo, {CFrame = CFrame.new(finalEscapePos)})
+                    
+                    rootPart.AssemblyLinearVelocity = Vector3.zero
+                    escapeTween:Play()
+                    escapeTween.Completed:Wait()
+                end)
+                continue
+            end
+        end
+        
+        -- DI CHUYỂN ĐẾN XU TRÊN MẶT PHẲNG MƯỢT MÀ (0S COOLDOWN)
+        local allCoins = GetTrueMM2Coins()
+        if #allCoins > 0 then
+            local closestCoin = nil
+            local shortestDistance = math.huge
+            
+            for _, coin in pairs(allCoins) do
+                local dist = (rootPart.Position - coin.Position).Magnitude
+                if dist < shortestDistance then
+                    shortestDistance = dist
+                    closestCoin = coin
+                end
+            end
+            
+            if closestCoin and closestCoin.Parent then
+                pcall(function()
+                    local targetPos = closestCoin.Position
+                    local flatTargetPos = Vector3.new(targetPos.X, rootPart.Position.Y, targetPos.Z)
+                    local distanceToCoin = (rootPart.Position - flatTargetPos).Magnitude
+                    
+                    local tweenInfo = TweenInfo.new(distanceToCoin / WALK_SPEED, Enum.EasingStyle.Linear)
+                    local coinTween = TweenService:Create(rootPart, tweenInfo, {CFrame = CFrame.new(flatTargetPos)})
+                    
+                    rootPart.AssemblyLinearVelocity = Vector3.zero
+                    coinTween:Play()
+                    
+                    -- Vòng lặp theo dõi khung hình siêu tốc
+                    while coinTween.PlaybackState == Enum.PlaybackState.Playing do
+                        if not closestCoin or not closestCoin.Parent then
+                            coinTween:Cancel()
+                            break
+                        end
+                        
+                        local currentDist = (rootPart.Position - closestCoin.Position).Magnitude
+                        
+                        -- XÓA COOLDOWN: Kích hoạt nhặt xu sớm khi lọt vào bán kính Aura (8 studs)
+                        if firetouchinterest and currentDist <= TOUCH_AURA_RANGE then
+                            firetouchinterest(rootPart, closestCoin, 0)
+                            firetouchinterest(rootPart, closestCoin, 1)
+                        end
+                        
+                        local instantMud = GetMurderer()
+                        if instantMud and (rootPart.Position - instantMud.Position).Magnitude < SAFE_DISTANCE then
+                            coinTween:Cancel()
+                            break
+                        end
+                        
+                        RunService.Heartbeat:Wait()
+                    end
+                end)
+            end
+        end
+    end
+end
+
+-- =============================================================================
+-- [GẮN VÀO NÚT GẠT GIAO DIỆN CỦA BẠN]
+-- =============================================================================
+CreateToggleUI(MainPanel, "🏃‍♂️ Auto Farm Mượt 0s Cooldown", function(state)
+    _G.SmartCoinFarmActive = state
+    
+    if _G.SmartCoinFarmActive then
+        SmartFarmThread = task.defer(StartSmartFarm)
+    else
+        if SmartFarmThread then
+            SmartFarmThread = nil
+        end
+        pcall(function()
+            local char = game:GetService("Players").LocalPlayer.Character
+            local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+            if humanoid then humanoid:ChangeState(Enum.HumanoidStateType.GettingUp) end
+        end)
+    end
+end)
+
+--het auto farm
+-- 📌 [THIẾT KẾ NÚT TAB: COMBAT]
+-- --- 📌 BIẾN KIỂM SOÁT VÒNG LẶP KILL ALL SIÊU TỐC ---
+CreateToggleUI(CombatPanel, "⚔️ Kill All", function(state)
+    _G.KillAllActive = state
+    
+    if _G.KillAllActive then
+        task.spawn(function()
+            while _G.KillAllActive do
+                pcall(function()
+                    local myChar = LocalPlayer.Character
+                    local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                    local backpack = LocalPlayer:FindFirstChild("Backpack")
+                    
+                    -- TỰ ĐỘNG TRANG BỊ DAO KHÔNG CẦN CẦM SẴN
+                    local knife = (myChar and (myChar:FindFirstChild("Knife") or myChar:FindFirstChild("RealKnife"))) or 
+                                  (backpack and (backpack:FindFirstChild("Knife") or backpack:FindFirstChild("RealKnife")))
+                    
+                    if knife and myHRP then
+                        if knife.Parent == backpack then
+                            knife.Parent = myChar
+                        end
+                        
+                        -- LẤY REMOTE EVENT TẤN CÔNG
+                        local attackRemote = knife:FindFirstChild("Stab") or knife:FindFirstChildOfClass("RemoteEvent")
+                        
+                        -- QUÉT VÀ ĐƯA TỪNG NGƯỜI CHƠI ĐẾN TRƯỚC MẶT ĐỂ CHÉM
+                        for _, player in ipairs(Players:GetPlayers()) do
+                            if not _G.KillAllActive then break end
+                            
+                            if player ~= LocalPlayer and player.Character then
+                                local tRoot = player.Character:FindFirstChild("HumanoidRootPart")
+                                local tHum = player.Character:FindFirstChildOfClass("Humanoid")
+                                
+                                if tRoot and tHum and tHum.Health > 0 then
+                                    -- TRIỆU HỒI: Đưa trực tiếp Part của mục tiêu về sát trước mặt người dùng
+                                    tRoot.CFrame = myHRP.CFrame * CFrame.new(0, 0, -2)
+                                    
+                                    -- ĐỨNG IM VẬT LÝ ĐỂ TRÁNH LỖI VĂNG ĐỊNH VỊ
+                                    tRoot.AssemblyLinearVelocity = Vector3.zero
+                                    tRoot.AssemblyAngularVelocity = Vector3.zero
+                                    
+                                    -- TỰ ĐỘNG VUNG DAO CHÉM 1 PHÁT
+                                    knife:Activate()
+                                    if attackRemote then
+                                        attackRemote:FireServer(tRoot.Position)
+                                    end
+                                    
+                                    task.wait(0.05) -- Giãn cách cực ngắn giữa mỗi mạng để không bị crash
+                                end
+                            end
+                        end
+                    end
+                end)
+                task.wait(0.1)
+            end
+        end)
+    end
+end)
+
+-- Logic mở bảng nhỏ Silent Aim di động riêng biệt
+local SilentAimFrame = nil
+local function OpenSilentAimUI()
+    if SilentAimFrame then 
+        SilentAimFrame.Visible = not SilentAimFrame.Visible 
+        return 
+    end
+
+    SilentAimFrame = Instance.new("Frame")
+    SilentAimFrame.Size = UDim2.new(0, 200, 0, 120)
+    SilentAimFrame.Position = UDim2.new(0.5, 270, 0.4, -60)
+    SilentAimFrame.BackgroundColor3 = Color3.fromRGB(245, 248, 252)
+    SilentAimFrame.BorderSizePixel = 0
+    SilentAimFrame.Active = true
+    SilentAimFrame.Draggable = true
+    SilentAimFrame.Parent = UI
+    
+    local MainFrameCorner = Instance.new("UICorner", SilentAimFrame)
+    MainFrameCorner.CornerRadius = UDim.new(0, 12)
+
+    local sideStroke = Instance.new("UIStroke")
+    sideStroke.Color = Color3.fromRGB(174, 219, 255)
+    sideStroke.Thickness = 2
+    sideStroke.Parent = SilentAimFrame
+    
+    SilentAimFrame.BackgroundTransparency = 0.6
+
+    local subTitle = Instance.new("TextLabel")
+    subTitle.Size = UDim2.new(1, 0, 0, 30)
+    subTitle.BackgroundColor3 = Color3.fromRGB(174, 219, 255)
+    subTitle.BackgroundTransparency = 0.3
+    subTitle.Text = " SILENT AIM (DOESNOT WORK)"
+    subTitle.TextColor3 = Color3.fromRGB(90, 120, 150)
+    subTitle.Font = Enum.Font.SourceSansBold
+    subTitle.TextSize = 11
+    subTitle.Parent = SilentAimFrame
+    
+    local SubCorner = Instance.new("UICorner", subTitle)
+    SubCorner.CornerRadius = UDim.new(0, 12)
+
+    local actionBtn = Instance.new("TextButton")
+    actionBtn.Size = UDim2.new(1, -20, 0, 35)
+    actionBtn.Position = UDim2.new(0, 10, 0, 45)
+    actionBtn.BackgroundColor3 = Color3.fromRGB(130, 200, 255)
+    actionBtn.BackgroundTransparency = 0.2
+    actionBtn.Text = "SHOOT"
+    actionBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    actionBtn.Font = Enum.Font.SourceSansBold
+    actionBtn.TextSize = 11
+    actionBtn.Parent = SilentAimFrame
+
+    local ActionCorner = Instance.new("UICorner", actionBtn)
+    ActionCorner.CornerRadius = UDim.new(0, 8)
+    -- aimbot script o day
+_G.SilentAimSystemActive = false
+
+actionBtn.MouseButton1Click:Connect(function()
+    _G.SilentAimSystemActive = not _G.SilentAimSystemActive
+    
+    if _G.SilentAimSystemActive then
+        actionBtn.Text = "SHOOT"
+        actionBtn.BackgroundColor3 = Color3.fromRGB(255, 120, 120)
+        
+        task.spawn(function()
+            while _G.SilentAimSystemActive do
+                pcall(function()
+                    local Players = game:GetService("Players")
+                    local localplayer = Players.LocalPlayer
+                    local char = localplayer.Character
+                    local backpack = localplayer:FindFirstChild("Backpack")
+                    
+                    -- CÁC BIẾN CẤU HÌNH TRÍCH XUẤT TỪ YARHM GỐC
+                    local shootOffset = 2 -- Mức độ bù trừ mặc định
+                    local offsetToPingMult = 1 -- Hệ số nhân độ trễ mạng
+                    
+                    -- BƯỚC 1: QUY TRÌNH KIỂM TRA VÀ TỰ ĐỘNG ÉP RÚT SÚNG QUA HUMANOID
+                    local gun = (char and char:FindFirstChild("Gun")) or (backpack and backpack:FindFirstChild("Gun"))
+                    if gun then
+                        if gun.Parent == backpack and char and char:FindFirstChild("Humanoid") then
+                            char.Humanoid:EquipTool(gun)
+                            task.wait(0.3) -- Chờ nạp Module vũ khí
+                        end
+                        
+                        -- KIỂM TRA ĐƯỜNG DẪN REMOTE FUNCTION BẢO MẬT CỦA YARHM
+                        local gunTool = char:FindFirstChild("Gun")
+                        local remoteFunc = gunTool and gunTool:FindFirstChild("KnifeLocal") 
+                                           and gunTool.KnifeLocal:FindFirstChild("CreateBeam") 
+                                           and gunTool.KnifeLocal.CreateBeam:FindFirstChild("RemoteFunction")
+                        
+                        if remoteFunc then
+                            -- BƯỚC 2: QUÉT ĐỊNH VỊ CHÍNH XÁC KẺ CẦM DAO (MURDERER)
+                            local murdererPlayer = nil
+                            for _, p in ipairs(Players:GetPlayers()) do
+                                if p ~= localplayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                                    if p.Character:FindFirstChild("Knife") or p:FindFirstChild("Backpack"):FindFirstChild("Knife") then
+                                        murdererPlayer = p
+                                        break
+                                    end
+                                end
+                            end
+                            
+                            -- BƯỚC 3: THUẬT TOÁN TÍNH TOÁN VỊ TRÍ ĐÓN ĐẦU CHUẨN TOÁN HỌC GỐC YARHM
+                            if murdererPlayer and murdererPlayer.Character then
+                                local murdererHRP = murdererPlayer.Character:FindFirstChild("HumanoidRootPart")
+                                local murdererHum = murdererPlayer.Character:FindFirstChildOfClass("Humanoid")
+                                
+                                if murdererHRP and murdererHum and murdererHum.Health > 0 then
+                                    local velocity = murdererHRP.AssemblyLinearVelocity
+                                    local playerMoveDirection = murdererHum.MoveDirection
+                                    
+                                    -- Cấu trúc ma trận tính toán Vector hướng đi kết hợp với vận tốc quán tính của YARHM
+                                    local predictedPosition = murdererHRP.Position + ((velocity * Vector3.new(0.75, 0.5, 0.75))) * (shootOffset / 15) + playerMoveDirection * shootOffset
+                                    
+                                    -- Công thức toán học tự động đồng bộ bù trừ theo số Ping hiện tại của Executor
+                                    predictedPosition = predictedPosition * (((localplayer:GetNetworkPing() * 1000) * ((offsetToPingMult - 1) * 0.01)) + 1)
+                                    
+                                    -- ĐÓNG GÓI THAM SỐ CHUẨN MÃ HÓA "AH2"
+                                    local args = {
+                                        [1] = 1,
+                                        [2] = predictedPosition,
+                                        [3] = "AH2"
+                                    }
+                                    
+                                    -- GỌI LỆNH ĐỘC LẬP TẤN CÔNG QUA INVOKESERVER (SÚNG SẼ KHẠC ĐẠN NGAY)
+                                    remoteFunc:InvokeServer(unpack(args))
+                                    
+                                    -- Thực thi xong 1 phát chuẩn xác chết luôn, tự động tắt nút bấm chờ lượt sau
+                                    _G.SilentAimSystemActive = false
+                                    actionBtn.Text = "KÍCH HOẠT SCRIPT"
+                                    actionBtn.BackgroundColor3 = Color3.fromRGB(130, 200, 255)
+                                end
+                            end
+                        end
+                    end
+                end)
+                task.wait(0.1)
+            end
+        end)
+    else
+        actionBtn.Text = "KÍCH HOẠT SCRIPT"
+        actionBtn.BackgroundColor3 = Color3.fromRGB(130, 200, 255)
+    end
+end)
+
+ --ket thuc aimbot
+    local note = Instance.new("TextLabel")
+    note.Size = UDim2.new(1, 0, 0, 25)
+    note.Position = UDim2.new(0, 0, 1, -25)
+    note.BackgroundTransparency = 1
+    note.Text = "Giữ chuột kéo di chuyển bảng"
+    note.TextColor3 = Color3.fromRGB(120, 140, 160)
+    note.Font = Enum.Font.SourceSansItalic
+    note.TextSize = 11
+    note.Parent = SilentAimFrame
+end
+
+CreateButtonUI(CombatPanel, "🎯 Silent Aim (DOESNOT WORK)", OpenSilentAimUI)
+
+-- Tab Credit LinhHam2239 ( SOY )
+local CreditTxt = Instance.new("TextLabel")
+CreditTxt.Size = UDim2.new(1, 0, 1, 0)
+CreditTxt.BackgroundTransparency = 1
+CreditTxt.Text = "🌤️ SOY HUB v1\n\n- Owner: <font color='rgb(90, 140, 200)'><b>LinhHam2239 ( SOY )</b></font>"
+CreditTxt.TextColor3 = Color3.fromRGB(100, 120, 140)
+CreditTxt.TextSize = 14
+CreditTxt.Font = Enum.Font.SourceSansBold
+CreditTxt.TextXAlignment = Enum.TextXAlignment.Left
+CreditTxt.TextYAlignment = Enum.TextYAlignment.Top
+CreditTxt.RichText = true
+CreditTxt.Parent = CreditPanel
+
+-- =============================================================================
+-- [ĐOẠN CHÈN ẢNH FURINA CỦA BẠN VÀO GIỮA]
+-- =============================================================================
+local DecalID = 125075771430808 -- ID ảnh của bạn
+local Market = game:GetService("MarketplaceService")
+local success, info = pcall(function()
+    return Market:GetProductInfo(DecalID)
+end)
+
+local finalAssetID = "rbxassetid://" .. DecalID
+if success and info.AssetTypeId == 13 then
+    finalAssetID = "rbxassetid://" .. info.AssetId
+end
+
+-- =============================================================================
+-- [PART 5: HỆ THỐNG THU NHỎ & PHÍM TẮT]
+-- =============================================================================
+MinBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+    MiniBar.Visible = true
+end)
+
+MiniBar.MouseButton1Click:Connect(function()
+    MiniBar.Visible = false
+    MainFrame.Visible = true
+end)
+
+UserInputService.InputBegan:Connect(function(input, gpe)
+    if not gpe and input.KeyCode == Enum.KeyCode.K then
+        if MiniBar.Visible then
+            MiniBar.Visible = false
+            MainFrame.Visible = true
+        else
+            MainFrame.Visible = not MainFrame.Visible
+        end
+    end
+end)
+-- =============================================================================
+-- [SECURITY LOCK: MM2 GAME DETECTOR & ANTI-INJECT]
+-- =============================================================================
+local GameService = game:GetService("Players")
+local LocalPlayer = GameService.LocalPlayer
+local CurrentPlaceId = game.PlaceId
+
+-- Danh sách các mã Place ID chính thức của hệ thống game Murder Mystery 2
+local MM2_PlaceIds = {
+    [142823291] = true, -- Server công khai đấu chính thức (Public Match)
+    [3351323055] = true, -- Chế độ phòng đấu Assassin Mode
+    [3351323871] = true  -- Chế độ phòng đấu Hardcore Mode
+}
+
+-- Tiến hành quét kiểm tra tự động thời gian thực
+if not MM2_PlaceIds[CurrentPlaceId] then
+    -- Nếu không phải map MM2, tiến hành Kick nhân vật lập tức kèm thông báo cụ thể
+    LocalPlayer:Kick("\n\n[⚠️ SOY HUB SECURITY ALERT]\n\nThis game is NOT supported by SOY HUB!\nPlease execute this script inside Roblox Murder Mystery 2.")
+    return -- Dừng hoàn toàn luồng xử lý dữ liệu phía dưới, chống tải giao diện lỗi
+end
